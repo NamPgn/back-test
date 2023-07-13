@@ -99,9 +99,8 @@ export const addProduct = async (req, res) => {
       const metadataImage = {
         contentType: filename.mimetype,
       };
-      const fileNameimage = `${folderName}/${Date.now()}-${
-        filename.originalname
-      }`;
+      const fileNameimage = `${folderName}/${Date.now()}-${filename.originalname
+        }`;
       // Tạo đường dẫn đến file trên Firebase Storage
       const file = admin.storage().bucket(bucketName).file(fileNameimage);
       // Tạo stream để ghi dữ liệu video vào Firebase Storage
@@ -115,9 +114,8 @@ export const addProduct = async (req, res) => {
         contentType: video.mimetype,
       };
       // Tạo tên file mới cho video
-      const fileNamevideo = `${Date.now()}-${
-        video.originalname ? video.originalname : ""
-      }`;
+      const fileNamevideo = `${Date.now()}-${video.originalname ? video.originalname : ""
+        }`;
       // Tạo đường dẫn đến file trên Firebase Storage
       const filevideo = admin.storage().bucket(bucketName).file(fileNamevideo);
       // Tạo stream để ghi dữ liệu video vào Firebase Storage
@@ -336,9 +334,8 @@ export const editProduct = async (req, res, next) => {
         contentType: newVideoFile.mimetype,
       };
 
-      const fileNameImage = `${folderName}/${Date.now()}-${
-        newImageFile.originalname
-      }`;
+      const fileNameImage = `${folderName}/${Date.now()}-${newImageFile.originalname
+        }`;
       const fileNameVideo = `${Date.now()}-${newVideoFile.originalname}`;
 
       const fileImage = admin.storage().bucket(bucketName).file(fileNameImage);
@@ -438,9 +435,8 @@ export const deleteMultipleProduct = async (req, res) => {
 
 export const getAllProductsByCategory = async (req, res) => {
   try {
-    const id = req.params.id.toString();
+    const id = req.params.id;
     const categoryId = mongoose.Types.ObjectId(id);
-    const redisGetdata = JSON.parse(await redisClient.get(`serimovie_${id}`));
     // const data = await Products.aggregate([
     //   {
     //     $lookup: {
@@ -456,18 +452,7 @@ export const getAllProductsByCategory = async (req, res) => {
     //     }
     //   }
     // ]);
-    let data;
-    if (redisGetdata) {
-      data = redisGetdata;
-    } else {
-      const datas = await Products.find({ category: categoryId });
-      data = await redisClient.set(
-        `serimovie_${id}`,
-        JSON.stringify(datas),
-        "EX",
-        3600
-      );
-    }
+    const data = await Products.find({ category: categoryId });
     res.status(200).json(data);
     //Trong đó:
     // $lookup là phương thức kết hợp (join) dữ liệu từ hai bảng Products và categories.

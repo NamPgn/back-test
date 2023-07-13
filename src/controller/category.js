@@ -14,9 +14,9 @@ import redisClient from "../redis";
 const bucketName = process.env.BUCKET_NAME;
 export const getAll = async (req, res) => {
   try {
+    const default_limit = 15;
     const data = await getAllCategory();
     const page = parseInt(req.query.page) || 0;
-    const default_limit = 10;
     await Category.createIndexes();
     const resdisData = JSON.parse(await redisClient.get("categorys"));
     const skip = (page - 1) * default_limit; //số lượng bỏ qua
@@ -29,7 +29,8 @@ export const getAll = async (req, res) => {
       res.status(200).json(category);
     } else {
       const categorys = JSON.parse(await redisClient.get("categorys"));
-      res.status(200).json(categorys);
+      const category = categorys.slice(0, default_limit);
+      res.status(200).json(category);
     }
   } catch (error) {
     return res.status(400).json({
