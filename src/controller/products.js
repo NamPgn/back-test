@@ -25,11 +25,13 @@ export const getAllProducts = async (req, res) => {
     let data;
     if (redisGetdata) {
       // Nếu có dữ liệu trong Redis, lấy dữ liệu từ Redis để hiển thị theo từng trang
-      data = redisGetdata.slice(skip, skip + DEFAULT_LIMIT);
+      await redisClient.set('products', JSON.stringify(All), "EX", 3600); //cappj nhật trong redis server || client
+      const i = page ? redisGetdata.slice(skip, skip + DEFAULT_LIMIT) : redisGetdata;
+      data = i;
     } else {
       // Nếu không có dữ liệu trong Redis, lấy toàn bộ dữ liệu từ database và lưu vào Redis
-      await redisClient.set(`products`, JSON.stringify(All));
-      data = All.slice(skip, skip + DEFAULT_LIMIT);
+      await redisClient.set(`products`, JSON.stringify(All), "EX", 3600);
+      data = All;
     }
     res.status(200).json({
       data: data,
@@ -53,7 +55,7 @@ export const getOne = async (req, res) => {
     const redisGetdata = JSON.parse(await redisClient.get(`${_id}`));
     let data;
     if (redisGetdata) {
-      data = redisGetdata;
+      data = dataID;
     } else {
       await redisClient.set(_id, JSON.stringify(dataID), "EX", 3600);
       data = dataID;
@@ -165,9 +167,7 @@ export const addProduct = async (req, res) => {
               $addToSet: { products: data._id },
             });
           }
-          console.log("data", data);
-
-          return res.json(data);
+          return res.status(200).json(data);
         });
       stream.on("error", (err) => {
         console.error(err);
@@ -199,7 +199,7 @@ export const addProduct = async (req, res) => {
       };
       const data = await addPost(dataAdd);
       console.log("data", dataAdd);
-      res.json(data);
+      res.status(200).json(data);
     }
     // Xử lý sự kiện khi stream ghi dữ liệu thành công
   } catch (error) {

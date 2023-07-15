@@ -26,13 +26,13 @@ export const uploadServer2 = (req, res) => {
         await new videoServerAbyss({
           url: abyssUrl
         }).save();
-        let productId = await Products.updateOne({ _id: req.params.id }, {
+        await Products.updateOne({ _id: req.params.id }, {
           server2: abyssUrl
         });
-        console.log(abyssUrl);
-        return res.json(productId);
+        return res.json(abyssUrl);
       }
     })
+    console.log(req.params.id,req.body);
   } catch (error) {
     if (error) {
       console.log(error);

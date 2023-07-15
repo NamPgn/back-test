@@ -1,9 +1,10 @@
 import express from "express";
-import { CreateType, DeleteType, GetAllTypeCategorys, GetOneTypeCategory, PushCategory, UpdatedType } from "../controller/types";
+import { CreateType, DeleteType, GetAllTypeCategorys, GetOneTypeCategory, PushCategory, UpdatedType, getPhim } from "../controller/types";
 import { isAdmin, isAuth, requiredSignin } from "../middlewares/checkAuth";
 import { getAuth } from '../controller/auth';
 const router = express.Router();
 
+router.get('/type/movie', getPhim)
 router.get('/types', GetAllTypeCategorys);
 router.get('/type/:id', GetOneTypeCategory);
 router.post('/type', requiredSignin, isAuth, isAdmin, CreateType);

@@ -7,9 +7,9 @@ const authSchema = mongoose.Schema({
     // email: {
     //     type: String
     // },
-    // image: {
-    //     type: String
-    // },
+    image: {
+        type: String
+    },
     password: {
         type: String
     },

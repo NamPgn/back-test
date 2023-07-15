@@ -14,7 +14,6 @@ export const GetAllTypeCategorys = async (req, res) => {
 }
 
 
-
 export const GetOneTypeCategory = async (req, res) => {
   try {
     const id = req.params.id;
@@ -104,6 +103,17 @@ export const PushCategory = async (req, res) => {
       success: true,
       data: newData
     })
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    })
+  }
+}
+
+export const getPhim = async (req, res) => {
+  try {
+    const data = await Types.findOne({ name: "Trending" }).populate('categorymain.cates').populate('products').populate('category')
+    return res.status(200).json(data)
   } catch (error) {
     return res.status(400).json({
       message: error.message,

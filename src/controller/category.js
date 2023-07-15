@@ -14,24 +14,27 @@ import redisClient from "../redis";
 const bucketName = process.env.BUCKET_NAME;
 export const getAll = async (req, res) => {
   try {
-    const default_limit = 15;
+    const default_limit = 10;
     const data = await getAllCategory();
     const page = parseInt(req.query.page) || 0;
     await Category.createIndexes();
     const resdisData = JSON.parse(await redisClient.get("categorys"));
     const skip = (page - 1) * default_limit; //số lượng bỏ qua
-    redisClient.set("categorys", JSON.stringify(data));
+    await redisClient.set("categorys", JSON.stringify(data), "EX", 3600);
     let category;
     if (page) {
       if (resdisData) {
         category = resdisData.slice(skip, skip + default_limit);
       }
-      res.status(200).json(category);
     } else {
+      await redisClient.set("categorys", JSON.stringify(data), "EX", 3600);
       const categorys = JSON.parse(await redisClient.get("categorys"));
-      const category = categorys.slice(0, default_limit);
-      res.status(200).json(category);
+      category = categorys;
     }
+    res.status(200).json({
+      data: category,
+      length: data.length,
+    });
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -54,7 +57,7 @@ export const getOne = async (req, res) => {
 export const readProductByCategory = async (req, res) => {
   try {
     const data = await Products.find().populate("category", "name");
-    
+
     res.json(data);
   } catch (error) {
     return res.status(400).json({
@@ -63,15 +66,15 @@ export const readProductByCategory = async (req, res) => {
   }
 };
 
+const folderName = "category";
 export const addCt = async (req, res) => {
   try {
-    const { name, linkImg, sumSeri, des, type, week } = req.body;
+    const { name, linkImg, sumSeri, des, type, week, up } = req.body;
     const file = req.file;
-    const folderName = "category";
-
     const metadatavideo = {
       contentType: file.mimetype,
     };
+
     const fileName = `${folderName}/${Date.now()}-${file.originalname}`;
     const files = admin.storage().bucket(bucketName).file(fileName);
     const streamvideo = files.createWriteStream({
@@ -89,6 +92,7 @@ export const addCt = async (req, res) => {
         sumSeri: sumSeri,
         type: type,
         week: week,
+        up: up
       };
       const cate = await addCategory(newDt);
       await WeekCategory.findByIdAndUpdate(cate.week, {
@@ -112,17 +116,99 @@ export const addCt = async (req, res) => {
 
 export const updateCate = async (req, res) => {
   try {
-    const data = req.body;
+    const { name, sumSeri, des, type, week, up } = req.body;
     const { id } = req.params;
-    const dataEdit = await updateCategory(id, data);
-    // Cập nhật thông tin category tương ứng trong bảng week
-    await WeekCategory.findOneAndUpdate(
-      { _id: dataEdit.week },
-      { $set: { "category.$[elem]": dataEdit } },
-      { arrayFilters: [{ "elem._id": dataEdit._id }] }
-    );
-    res.json(dataEdit);
+    const newfile = req.file;
+    const findById = await Category.findById(id);
+    
+    // Xóa tệp hình ảnh cũ từ Firebase Storage
+    // const oldImageFileName = findById.linkImg.split(`/`).pop().split('?alt=media')[0]; //lấy sau thằng image vì nó qua folder name là image
+    // const decodedImage = decodeURIComponent(oldImageFileName).split('/')[1]; //
+    // const oldImageFile = admin.storage().bucket(bucketName).file(`${folderName}/${decodedImage}`); //còn thằng này không có folder mà là lấy chay nên phải lấy ra thằng cuối cùng .
+    // if (decodedImage) {
+    //   await oldImageFile.delete();
+    // }
+    if (!findById) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+    findById.name = name;
+    findById.des = des;
+    findById.week = week;
+    findById.sumSeri = sumSeri;
+    findById.up = up;
+    findById.type = type;
+    if (newfile) {
+      const metadataImage = {
+        contentType: newfile.mimetype,
+      };
+      const fileNameImage = `${folderName}/${Date.now()}-${newfile.originalname}`;
+      const fileImage = admin.storage().bucket(bucketName).file(fileNameImage);
+
+      const streamImage = fileImage.createWriteStream({
+        metadata: metadataImage,
+        resumable: false,
+      });
+      const oldImageFileName = findById.linkImg.split(`/`).pop().split('?alt=media')[0]; //lấy sau thằng image vì nó qua folder name là image
+      const decodedImage = decodeURIComponent(oldImageFileName).split('/')[1]; //
+      const oldImageFile = admin.storage().bucket(bucketName).file(`${folderName}/${decodedImage}`); //còn thằng này không có folder mà là lấy chay nên phải lấy ra thằng cuối cùng .
+      if (decodedImage) {
+        await oldImageFile.delete();
+      }
+      streamImage.on("error", err => {
+        console.error(err);
+        res.status(500).send({ message: "Failed to upload video." });
+      });
+
+      // Ghi dữ liệu video vào stream
+      streamImage.end(newfile.buffer);
+      // Xử lý sự kiện khi stream ghi dữ liệu bị lỗi
+      streamImage.on("error", err => {
+        console.error(err);
+        res.status(500).send({ message: "Failed to upload video." });
+      });
+      //encode url
+      const encodedFileName = encodeURIComponent(fileNameImage);
+      streamImage.on('finish', async () => {
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedFileName}?alt=media`;
+        findById.name = name;
+        findById.linkImg = imageUrl;
+        findById.des = des;
+        findById.week = week;
+        findById.sumSeri = sumSeri;
+        findById.up = up;
+        findById.type = type;
+        
+        // Cập nhật thông tin category tương ứng trong bảng week
+
+        // await WeekCategory.findOneAndUpdate(
+        //   { _id: findById.week },
+        //   { $set: { "category.$[elem]": dataEdit } },
+        //   { arrayFilters: [{ "elem._id": dataEdit._id }] }
+        // );
+        const data = await findById.save();
+
+        return res.status(200).json({
+          success: true,
+          message: "Dữ liệu sản phẩm đã được cập nhật.",
+          data: data,
+        });
+      })
+    } else {
+      findById.name = name;
+      findById.des = des;
+      findById.week = week;
+      findById.sumSeri = sumSeri;
+      findById.up = up;
+      findById.type = type;
+      await findById.save();
+      return res.status(200).json({
+        success: true,
+        message: "Dữ liệu sản phẩm đã được cập nhật.",
+        data: findById,
+      });
+    }
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       message: error.message,
     });

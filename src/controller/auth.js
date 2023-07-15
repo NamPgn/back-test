@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
         // filename ? filename : "https://taytou.com/wp-content/uploads/2022/08/Tai-anh-dai-dien-cute-de-thuong-hinh-meo-nen-xanh-la.png";
 
         // console.log("req.file", filename)
-
+        
         const getuser = await getDataUser({ username: username }); //tìm lấy ra cái thằng email
         if (getuser) { //kiểm tra nếu mà nó email đã tồn tại thì trả về cái lỗi
             res.status(401).json({
@@ -72,10 +72,10 @@ export const singin = async (req, res) => {
             username: getUserLogin.username,
             // email: getUserLogin.email,
             role: getUserLogin.role,
-            // image: getUserLogin.image
+            image: getUserLogin.image
         }
         const tokenAuth = generateToken(user)
-
+        req.session=user
         // send mail with defined transport object
 
 

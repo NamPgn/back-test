@@ -21,9 +21,12 @@ const categorySchema = new mongoose.Schema({
   type: {
     type: String
   },
-  week:{
+  week: {
     type: mongoose.Types.ObjectId,
     ref: 'Week'
+  },
+  up: {
+    type: Number
   }
 }, { timestamps: true });
 categorySchema.indexes();

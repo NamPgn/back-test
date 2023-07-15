@@ -12,6 +12,7 @@ import admin from "firebase-admin";
 import routerCart from "./routes/cart.js";
 import routerTypes from "./routes/types.js";
 import routerCategorymain from "./routes/categorymain.js";
+import routerImage from './routes/image.user'
 import serviceAccount from "../public/path/mystorage-265d8-firebase-adminsdk-4jj90-9c56ceaf71.json";
 import routerWeek from "./routes/week.category";
 const port = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ const routers = [
   routerTypes,
   routerCategorymain,
   routerWeek,
+  routerImage
 ];
 
 const app = express();

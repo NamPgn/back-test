@@ -10,7 +10,7 @@ router.get('/category/products', readProductByCategory);
 router.get('/categorys', getAll);
 router.get('/category/:id', getOne);
 router.post('/category/:userId', requiredSignin, isAuth, isAdmin, CheckToken, uploadCategory.single('file'), addCt);
-router.put('/category/:id/:userId', requiredSignin, isAuth, isAdmin, updateCate);
+router.put('/category/:id', requiredSignin, isAuth, isAdmin, CheckToken, uploadCategory.single('file'), updateCate);
 router.delete('/category/:id/:userId', requiredSignin, isAuth, isAdmin, deleteCategoryController)
 router.get('/category/getAllCategoryNotRequest/:id', getAllCategoryNotReq);
 router.post('/category/week/:id', push);
