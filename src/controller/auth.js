@@ -1,7 +1,6 @@
-import { addUser, getAll, getUser, editUser, deleteUser, getDataUser } from "../services/auth";
+import { addUser, getDataUser } from "../services/auth";
 import { generateToken } from "../services/requestToken";
 import { comparePassWord, passwordHash } from "../services/security";
-import { sendMail } from "../utills/mailer";
 import Auth from "../module/auth";
 
 export const signup = async (req, res) => {
@@ -72,7 +71,7 @@ export const singin = async (req, res) => {
             username: getUserLogin.username,
             // email: getUserLogin.email,
             role: getUserLogin.role,
-            image: getUserLogin.image
+            image: getUserLogin.image,
         }
         const tokenAuth = generateToken(user)
         req.session=user
@@ -102,75 +101,6 @@ export const singin = async (req, res) => {
         })
     }
 }
-
-export const getAlluser = async (req, res) => {
-    try {
-        const data = await getAll();
-        res.json(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const edit = async (req, res) => {
-    try {
-        const { username, email, password, role, _id, image } = req.body;
-        // const { filename } = req.file;
-        const payload = req.body;
-        let datas = {
-            username: username,
-            email: email,
-            image: image,
-            password: password,
-            role: role
-        }
-        const data = await editUser(_id, datas);
-        res.status(200).json({
-            message: "Thành công", data
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            message: "Lỗi rồi"
-        })
-    }
-}
-
-// export const editImage = async (req, res) => {
-//     try {
-//         const { filename } = req.file;
-//         const { id } = req.params;
-//         const payload = {
-//             image: `http://localhost:8000/images/` + filename,
-//         }
-//         const data = await editImg(id, payload);
-//         console.log("data", data);
-//         res.json(data);
-//     } catch (error) {
-//         return res.status(400).json({
-//             message: "Lỗi rồi"
-//         })
-//         console.log(error);
-//     }
-// }
-
-export const remove = async (req, res) => {
-    const id = req.params.id;
-    try {
-        var data = await deleteUser(id);
-        console.log(data);
-        res.status(200).json({
-            message: "Thành công", id,
-
-        })
-    } catch (error) {
-        console.log(error)
-        return res.status(400).json({
-            message: "Lỗi rồi"
-        })
-    }
-}
-
 export const getAuth = async (req, res, next, id) => {
     try {
         const user = await Auth.findById(id).exec();
@@ -187,35 +117,3 @@ export const getAuth = async (req, res, next, id) => {
     }
 }
 
-export const getone = async (req, res, next) => {
-    try {
-        const id = req.params.id
-        const user = await Auth.findById(id).exec();
-        res.json(user)
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-export const commented = async (req, res) => {
-    try {
-        const data = req.body;
-        const textComment = await addPost(data);
-        res.json(textComment);
-        console.log(textComment)
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-export const findCartByUser = async (req, res) => {
-    try {
-        const _id = req.params.id;
-        const data = await Auth.findById(_id).populate('cart.product', 'name seri image category');
-        return res.status(200).json(data);
-    } catch (error) {
-        return res.status(400).json({ error: error });
-    }
-}

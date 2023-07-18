@@ -198,8 +198,7 @@ export const addProduct = async (req, res) => {
         dailyMotionServer: dailyMotionServer,
       };
       const data = await addPost(dataAdd);
-      console.log("data", dataAdd);
-      res.status(200).json(data);
+     return res.status(200).json(data);
     }
     // Xử lý sự kiện khi stream ghi dữ liệu thành công
   } catch (error) {
