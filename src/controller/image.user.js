@@ -1,4 +1,5 @@
 import Auth from "../module/auth";
+import imageUser from "../module/image.user";
 const cloudinary = require('cloudinary').v2;
 // Thiết lập Cloudinary
 cloudinary.config({
@@ -19,16 +20,22 @@ export const uploadUserImageToCloudDinary = (req, res) => {
       if (error) {
         return res.status(500).json(error);
       }
-      await new imageUser({
+      const newImage = await new imageUser({
         url: result.url,
         user_id: id
       }).save();
-      const data = await Auth.findOneAndUpdate({ id }, {
-        image: result.url
+      const data = await Auth.findByIdAndUpdate(id, {
+        $set: { image: newImage.url }
       })
-      return res.status(200).json(data);
+      return res.status(200).json({
+        data: data,
+        code: 200
+      });
     })
   } catch (error) {
-    return res.status(500).json(error.message);
+    return res.status(500).json({
+      error: error.message,
+      code: 500
+    });
   }
 }
