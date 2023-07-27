@@ -17,7 +17,6 @@ import serviceAccount from "../public/path/mystorage-265d8-firebase-adminsdk-4jj
 import routerWeek from "./routes/week.category";
 const port = process.env.PORT || 3000;
 
-
 const routers = [
   routerAuth,
   routerProducts,
@@ -35,7 +34,9 @@ const routers = [
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin:["https://tromphim.netlify.app/","http://localhost:5173"]
+}));
 
 routers.map((router) => app.use("/api", router));
 
@@ -58,3 +59,7 @@ admin.initializeApp({
 app.listen(port, async () => {
   console.log(`Server is running on: http://localhost:${port}`);
 });
+
+
+//https://accounts.google.com/o/oauth2/token?scope=https://www.googleapis.com/auth/drive&client_id=949752774575-9bh3rqk5j6ntflgkikluk7jhd8kiihfi.apps.googleusercontent.com&redirect_uri=http://localhost:8000&response_type=code&access_type=offline
+//https://accounts.google.com/o/oauth2/token?code

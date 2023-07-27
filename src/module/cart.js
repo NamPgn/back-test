@@ -8,7 +8,7 @@ const CartSchema = new Schema({
   product: {
     type: ObjectId,
     ref: "Products"
-  }
+  },
 }, { timestamps: true });
 
 export default mongoose.model('Cart', CartSchema)

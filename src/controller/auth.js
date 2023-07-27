@@ -71,7 +71,6 @@ export const singin = async (req, res) => {
             username: getUserLogin.username,
             // email: getUserLogin.email,
             role: getUserLogin.role,
-            image: getUserLogin.image,
         }
         const tokenAuth = generateToken(user)
         req.session=user

@@ -11,7 +11,7 @@ cloudinary.config({
 
 export const uploadUserImageToCloudDinary = (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.params.userId;
     cloudinary.uploader.upload(req.file.path, {
       folder: 'user',
       public_id: req.file.originalname,
@@ -24,12 +24,13 @@ export const uploadUserImageToCloudDinary = (req, res) => {
         url: result.url,
         user_id: id
       }).save();
-      const data = await Auth.findByIdAndUpdate(id, {
+      const updatedUser = await Auth.findByIdAndUpdate(id, {
         $set: { image: newImage.url }
-      })
+      }, { new: true }).exec();
       return res.status(200).json({
-        data: data,
-        code: 200
+        data: updatedUser,
+        code: 200,
+        success: true
       });
     })
   } catch (error) {
