@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.get('/cart', getAllCartControllers);
 router.post('/cart/:userId', requiredSignin, isAuth, checkToken, createCartController);
-router.post('/cart/:id:/:userId', requiredSignin, isAuth, checkToken, deleteCartController);
+router.post('/cart/:id/:userId', requiredSignin, isAuth, checkToken, deleteCartController);
 router.param('userId', getAuth);
 export default router
