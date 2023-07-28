@@ -22,7 +22,7 @@ import { uploadVimeo } from '../controller/video.server.dinary';
 
 const router = express.Router();
 router.post('/product/vimeo', uploadServer.single('fileDinary'), uploadVimeo)
-router.post('/product/server2/:id', uploadServer.single('fileupload'), uploadServer2)
+router.post('/product/abyss/:id/:userId',requiredSignin, isAuth, isAdmin, checkToken, uploadServer.single('fileupload'), uploadServer2)
 router.get('/products', getAllProducts);
 router.get('/product/:id', getOne);
 router.delete('/product/:id/:userId', requiredSignin, isAuth, isAdmin, checkToken, delete_);

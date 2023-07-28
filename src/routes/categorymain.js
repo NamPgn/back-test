@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/categorymain', getAllCategorymain);
 router.get('/categorymain/:id', getOneCategoryMain);
-router.post('/categorymain', requiredSignin, isAuth, isAdmin, addCategorymain);
+router.post('/categorymain/:userId', requiredSignin, isAuth, isAdmin, addCategorymain);
 router.post('/categorymain/:id/:userId', requiredSignin, isAuth, isAdmin, deleteCategorymainByproduct);
 router.put('/category/:id', requiredSignin, isAuth, isAdmin, updateCategorymain);
 router.param('userId', getAuth);
