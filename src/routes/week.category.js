@@ -9,5 +9,5 @@ routerWeek.get('/week/:id', one);
 routerWeek.post('/week/:userId', requiredSignin, isAuth, checkToken, create);
 routerWeek.delete('/week/:id/:userId', requiredSignin, isAuth, checkToken, del);
 routerWeek.put('/week/:id/:userId', requiredSignin, isAuth, checkToken, edit);
-router.param('userId', getAuth);
+routerWeek.param('userId', getAuth);
 export default routerWeek;
