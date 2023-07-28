@@ -35,7 +35,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-  origin:"https://tromphim.netlify.app/"
+  origin:["https://tromphim.netlify.app/","http://localhost:5173"],
+  optionsSuccessStatus: 200
 }));
 
 routers.map((router) => app.use("/api", router));
