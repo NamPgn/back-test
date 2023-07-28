@@ -26,7 +26,7 @@ export const isAdmin = (req, res, next) => {
   next();
 }
 
-export const CheckToken = (req, res, next) => {
+export const checkToken = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   if (!req.headers.authorization) { //check nếu k có token gửi lên thì cút
     return res.status(401).json({

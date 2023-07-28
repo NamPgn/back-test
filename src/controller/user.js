@@ -5,7 +5,7 @@ export const getAlluser = async (req, res) => {
       const data = await getAll();
       res.json(data);
   } catch (error) {
-      console.log(error);
+      return res.status(400).json({ error: error.message });
   }
 }
 
@@ -25,10 +25,8 @@ export const edit = async (req, res) => {
           message: "Thành công", data
       })
   } catch (error) {
-      console.log(error);
-      return res.status(400).json({
-          message: "Lỗi rồi"
-      })
+      return res.status(400).json({ error: error.message });
+     
   }
 }
 
@@ -53,10 +51,10 @@ export const remove = async (req, res) => {
 export const getone = async (req, res, next) => {
   try {
       const id = req.params.id
-      const user = await Auth.findById(id).exec();
-      res.json(user)
+      const user = await Auth.findById(id).populate('cart.product', 'name seri image category').exec();
+      res.status(200).json(user)
   } catch (error) {
-      console.log(error)
+    return res.status(400).json({ error: error.message });
   }
 }
 
@@ -68,7 +66,7 @@ export const commented = async (req, res) => {
       res.json(textComment);
       console.log(textComment)
   } catch (error) {
-      console.log(error);
+      return res.status(400).json({ error: error.message });
   }
 }
 
@@ -79,6 +77,6 @@ export const findCartByUser = async (req, res) => {
       const data = await Auth.findById(_id).populate('cart.product', 'name seri image category');
       return res.status(200).json(data);
   } catch (error) {
-      return res.status(400).json({ error: error });
+      return res.status(400).json({ error: error.message });
   }
 }
