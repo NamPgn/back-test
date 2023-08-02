@@ -10,14 +10,13 @@ export const signup = async (req, res) => {
         // filename ? filename : "https://taytou.com/wp-content/uploads/2022/08/Tai-anh-dai-dien-cute-de-thuong-hinh-meo-nen-xanh-la.png";
 
         // console.log("req.file", filename)
-        
+
         const getuser = await getDataUser({ username: username }); //tìm lấy ra cái thằng email
         if (getuser) { //kiểm tra nếu mà nó email đã tồn tại thì trả về cái lỗi
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 message: 'Tài khoản đã tồn tại'
             })
-            return;
         }
         // mã hóa mật khẩu
         var hashPw = passwordHash(password);
@@ -29,7 +28,6 @@ export const signup = async (req, res) => {
             // image: `http://localhost:${process.env.PORT}/images/` + filename,
             role: role
         }
-        console.log("newUsser", newUser)
         await addUser(newUser)
         return res.status(200).json({
             success: true,
@@ -37,9 +35,9 @@ export const signup = async (req, res) => {
             newUser: [newUser]
         })
     } catch (error) {
-        console.log(error);
-        res.json({
-            message: "Không đăg kí dđược "
+        return res.json({
+            message: "Đăng kí không thành công!",
+            success:false,
         })
     }
 }
@@ -52,17 +50,19 @@ export const singin = async (req, res) => {
             return res.status(401).json(
                 {
                     success: false,
-                    message: 'Tài khoản không tồn tại'
+                    message: 'Tài khoản không tồn tại',
+                    code:401
                 }
             )
         }
 
         const comparePw = comparePassWord(password, getUserLogin.password);
         if (!comparePw) {
-            return res.status(401).json(
+            return res.status(400).json(
                 {
                     success: false,
-                    message: 'Nhập lại mật khẩu đi'
+                    message: 'Nhập lại mật khẩu đi',
+                    code:400
                 }
             )
         }
@@ -73,7 +73,7 @@ export const singin = async (req, res) => {
             role: getUserLogin.role,
         }
         const tokenAuth = generateToken(user)
-        req.session=user
+        req.session = user
         // send mail with defined transport object
 
 
@@ -95,8 +95,9 @@ export const singin = async (req, res) => {
         })
     } catch (error) {
         res.status(400).json({
+            code:400,
             success: false,
-            message: error.message,
+            message: "Đăng nhập không thành công!",
         })
     }
 }

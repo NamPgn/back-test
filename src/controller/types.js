@@ -91,7 +91,7 @@ export const UpdatedType = async (req, res) => {
   }
 }
 
-export const PushCategory = async (req, res) => {
+export const pushCategory = async (req, res) => {
   try {
     const typeId = req.params.id;
     const body = req.body;

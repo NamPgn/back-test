@@ -6,8 +6,8 @@ const routerWeek = express.Router();
 
 routerWeek.get('/weeks', all);
 routerWeek.get('/week/:id', one);
-routerWeek.post('/week/:userId', requiredSignin, isAuth, checkToken, create);
-routerWeek.delete('/week/:id/:userId', requiredSignin, isAuth, checkToken, del);
-routerWeek.put('/week/:id/:userId', requiredSignin, isAuth, checkToken, edit);
+routerWeek.post('/week/:userId', checkToken, requiredSignin, isAuth, create);
+routerWeek.delete('/week/:id/:userId', checkToken, requiredSignin, isAuth, del);
+routerWeek.put('/week/:id/:userId', checkToken, requiredSignin, isAuth, edit);
 routerWeek.param('userId', getAuth);
 export default routerWeek;

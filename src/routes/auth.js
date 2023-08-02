@@ -10,12 +10,12 @@ router.get('/user/:id', getAuth);
 router.get('/user_one/:id', getone)
 router.post('/signup', signup);
 router.post('/signin', singin);
-router.delete('/removeUser/:id', requiredSignin, isAuth, checkToken, remove);
-router.put('/user/:id', requiredSignin, isAuth, checkToken, edit);
+router.delete('/removeUser/:id/:userId', checkToken, requiredSignin, isAuth, remove);
+router.put('/user/:id', checkToken, requiredSignin, isAuth, edit);
 router.get('/user/:id', getAuth);
 // router.put('/user/image/:id', upload, editImage);
 // router.post('/user/creating', uploadStorageUser.single("xlsx"), uploadXlxs);
 router.post('/user/comment', commented);
 router.get('/user/cart/:id', findCartByUser);
-router.param('id', getAuth)
+router.param('userId', getAuth)
 export default router;

@@ -198,7 +198,7 @@ export const addProduct = async (req, res) => {
         dailyMotionServer: dailyMotionServer,
       };
       const data = await addPost(dataAdd);
-     return res.status(200).json(data);
+      return res.status(200).json(data);
     }
     // Xử lý sự kiện khi stream ghi dữ liệu thành công
   } catch (error) {
@@ -227,9 +227,8 @@ export const delete_ = async (req, res, next) => {
       .split("/")
       .pop()
       .split("?alt=media")[0]; // Lấy tên tệp video từ URL
-    console.log(videoFileName);
     const videoFile = admin.storage().bucket(bucketName).file(videoFileName);
-    if (videoFileName) {
+    if (videoFile) {
       await videoFile.delete();
     }
 
@@ -243,7 +242,6 @@ export const delete_ = async (req, res, next) => {
       .storage()
       .bucket(bucketName)
       .file(`${folderName}/${decodedImage}`); //còn thằng này không có folder mà là lấy chay nên phải lấy ra thằng cuối cùng .
-    console.log(decodedImage, imageFileName);
     if (decodedImage) {
       await imageFile.delete();
     }
@@ -268,8 +266,8 @@ export const delete_ = async (req, res, next) => {
         $pull: { products: { $in: [id] } }, // tìm tất ca thằng product trong list category có id trùng vs thằng id product
       });
     }
-    await deleteProduct(id);
-    return res.json({ message: "Product deleted successfully." });
+    const data = await deleteProduct(id);
+    return res.json({ message: "Product deleted successfully.", success: true, data: data });
   } catch (error) {
     // console.log(error);
     return res.status(400).json({
@@ -451,7 +449,8 @@ export const getAllProductsByCategory = async (req, res) => {
     //     }
     //   }
     // ]);
-    const data = await Products.find({ category: categoryId });
+    const data = await Products.find({ category: categoryId })
+    data.sort((a, b) => parseInt(b.seri) - parseInt(a.seri));
     res.status(200).json(data);
     //Trong đó:
     // $lookup là phương thức kết hợp (join) dữ liệu từ hai bảng Products và categories.

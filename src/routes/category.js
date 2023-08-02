@@ -5,14 +5,13 @@ import { checkToken, isAdmin, isAuth, requiredSignin } from "../middlewares/chec
 import { uploadCategory } from "../services/upload";
 const router = express.Router();
 
-
 router.get('/category/products', readProductByCategory);
 router.get('/categorys', getAll);
 router.get('/category/:id', getOne);
-router.post('/category/:userId', requiredSignin, isAuth, isAdmin, checkToken, uploadCategory.single('file'), addCt);
-router.put('/category/:id/:userId', requiredSignin, isAuth, isAdmin, checkToken, uploadCategory.single('file'), updateCate);
-router.delete('/category/:id/:userId', requiredSignin, isAuth, isAdmin, deleteCategoryController)
+router.post('/category/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadCategory.single('file'), addCt);
+router.put('/category/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadCategory.single('file'), updateCate);
+router.delete('/category/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, deleteCategoryController)
 router.get('/category/getAllCategoryNotRequest/:id', getAllCategoryNotReq);
-router.post('/category/week/:id/:userId', requiredSignin, isAuth, isAdmin, push);
+router.post('/category/week/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, push);
 router.param('userId', getAuth);
 export default router
