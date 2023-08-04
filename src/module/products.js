@@ -6,7 +6,7 @@ const productSchema = new Schema({
     type: String
   },
   view: {
-    type: Number
+    type: String
   },
   image: {
     type: String

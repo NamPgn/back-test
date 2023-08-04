@@ -15,7 +15,7 @@ import {
   uploadXlxsProducts,
   uploadvideoandimage,
 } from '../services/upload';
-import { checkToken, isAdmin, isAuth, requiredSignin } from "../middlewares/checkAuth";
+import { checkToken, isAdmin, isAuth, isSuperAdmin, requiredSignin } from "../middlewares/checkAuth";
 import { getAuth } from '../controller/auth';
 import { uploadServer2 } from '../controller/video.server.abyss';
 import { uploadVimeo } from '../controller/video.server.dinary';
@@ -25,7 +25,7 @@ router.get('/products', getAllProducts);
 router.get('/product/:id', getOne);
 router.post('/product/vimeo', uploadServer.single('fileDinary'), uploadVimeo)
 router.post('/product/abyss/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadServer.single('fileupload'), uploadServer2)
-router.delete('/product/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, delete_);
+router.delete('/product/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, isSuperAdmin, delete_);
 router.post('/product/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadvideoandimage, addProduct);
 router.put('/product/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadvideoandimage, editProduct);
 router.post('/product/creating:/userId', checkToken, requiredSignin, isAuth, isAdmin, uploadStorageProduct.single('xlsxProduct'), uploadXlxsProducts);

@@ -38,7 +38,6 @@ export const getAllProducts = async (req, res) => {
       length: redisGetdata ? redisGetdata.length : All.length,
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: error.message,
     });
@@ -62,7 +61,6 @@ export const getOne = async (req, res) => {
     }
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: "Không ìm thấy phim",
     });
@@ -202,7 +200,6 @@ export const addProduct = async (req, res) => {
     }
     // Xử lý sự kiện khi stream ghi dữ liệu thành công
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: "Error uploading video",
@@ -269,7 +266,6 @@ export const delete_ = async (req, res, next) => {
     const data = await deleteProduct(id);
     return res.json({ message: "Product deleted successfully.", success: true, data: data });
   } catch (error) {
-    // console.log(error);
     return res.status(400).json({
       message: error.message,
     });
@@ -401,7 +397,6 @@ export const editProduct = async (req, res, next) => {
     }
     // add
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: error.message,
     });
@@ -416,7 +411,6 @@ export const deleteMultipleProduct = async (req, res) => {
         $in: id,
       },
     });
-    console.log("id", data, "id", id);
     return res.status(200).json({
       data: data,
       id: id,
@@ -469,7 +463,6 @@ export const getAllProductsByCategory = async (req, res) => {
 export const findCommentByIdProduct = async (req, res) => {
   try {
     const _id = { _id: req.params.id };
-    console.log("_id", _id);
     const data = await Products.findById(_id).populate(
       "comments.user",
       "username image"

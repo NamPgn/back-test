@@ -52,7 +52,6 @@ export const uploadXlxs = async (req, res, next) => {
       message: "data" + saveData
     })
   } catch (error) {
-    console.log(error);
   }
 }
 
@@ -80,7 +79,6 @@ export const uploadXlxsProducts = async (req, res, next) => {
       message: "data" + saveData
     })
   } catch (error) {
-    console.log(error);
   }
 }
 export const uploadStorageProduct = multer({ storage: storageXlxsProduct });

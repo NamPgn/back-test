@@ -26,6 +26,5 @@ export const sendMail = async (mailOptions) => {
     console.log('Email sent successfully');
   } catch (error) {
     console.log(error);
-    console.log('Error sending email');
   }
 }

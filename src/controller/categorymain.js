@@ -29,7 +29,6 @@ export const getOneCategoryMain = async (req, res) => {
 export const addCategorymain = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
     const cate = await new Categorymain(data).save();
     await Types.findByIdAndUpdate(data.typeId, {
       $push: { categorymain: { cates: cate._id } }
@@ -70,8 +69,7 @@ export const updateCategorymain = async (req, res) => {
     const { id } = req.params
     const dataEdit = Categorymain.findByIdAndUpdate(id, data);
     //thiếu phải nhảy sang thằng type tìm cái id nếu tông tại thì update khỏi thằng type
-    console.log("data", dataEdit);
-    res.json(dataEdit);
+    return res.json(dataEdit);
   } catch (error) {
     return res.status(400).json({
       message: error.message

@@ -4,9 +4,10 @@ const authSchema = mongoose.Schema({
     username: {
         type: String
     },
-    // email: {
-    //     type: String
-    // },
+    isActive: {
+        type: Number,
+        default: 0
+    },
     image: {
         type: String
     },

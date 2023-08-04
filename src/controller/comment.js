@@ -8,7 +8,9 @@ export const getAllCommentsControllers = async (req, res) => {
     const data = await Comments.find().populate('user', 'username role image' ).populate('product', 'name seri');
     res.json(data);
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      message: error.message
+    })
   }
 }
 
@@ -41,14 +43,15 @@ export const getCommentsUserId = async (req, res) => {
     // })
     // res.status(200).json(ar);
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      message: error.message
+    })
   }
 };
 
 export const addCommentController = async (req, res) => {
   try {
     const dataAdd = req.body;
-    console.log(dataAdd);
     const _id = req.params.id;
     await Products.findByIdAndUpdate(_id, {
       $push: { comments: { commentContent: dataAdd.commentContent, user: dataAdd.user } },
@@ -56,9 +59,8 @@ export const addCommentController = async (req, res) => {
     const data = await new Comments(dataAdd).save();
     res.json(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
-      message: error
+      message: error.message
     })
   }
 }
@@ -70,9 +72,8 @@ export const deleteComment = async (req, res) => {
     const data = await Comments.findOneAndDelete({ '_id': _id });
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
-      message: error
+      message: error.message
     })
   }
 }
@@ -85,9 +86,8 @@ export const updateCommentController = async (req, res) => {
     const data = await Comments.findByIdAndUpdate(_id, dataud)
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
-      message: error
+      message: error.message
     })
   }
 }

@@ -8,7 +8,9 @@ export const getUrlTrailerControllers = async (req, res) => {
     const data = await trailerHomePageModel.findOne();
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      message: error.message
+    })
   }
 }
 
@@ -71,7 +73,6 @@ export const editTrailerHomePageUrlController = async (req, res) => {
       return res.status(200).json({ success: true, message: "Dữ liệu sản phẩm đã được cập nhật.", data: data });
     }
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       message: error.message
     })
@@ -83,7 +84,9 @@ export const getTrailerController = async (req, res) => {
     const data = await getTrailerUrlSevices();
     res.json(data);
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      message: error.message
+    })
   }
 }
 
@@ -130,6 +133,8 @@ export const create = async (req, res) => {
       return res.json(data);
     })
   } catch (error) {
-    console.log(error);
+    return res.status(400).json({
+      message: error.message
+    })
   }
 }

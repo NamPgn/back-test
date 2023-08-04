@@ -32,10 +32,8 @@ export const uploadServer2 = (req, res) => {
         return res.json(abyssUrl);
       }
     })
-    console.log(req.params.id,req.body);
   } catch (error) {
     if (error) {
-      console.log(error);
       res.status(500).json('Internal server error');
     } else {
       res.json('Video uploaded successfully');

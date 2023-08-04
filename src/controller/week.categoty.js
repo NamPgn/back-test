@@ -25,7 +25,6 @@ export const one = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const newData = await new WeekCategory(req.body).save();
-    console.log(req.body);
     res.json(newData);
   } catch (error) {
     return res.status(404).json({

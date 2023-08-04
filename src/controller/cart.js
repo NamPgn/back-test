@@ -6,8 +6,7 @@ export const getAllCartControllers = async (req, res) => {
     const data = await Cart.find().populate('product', 'name seri image').populate('user', 'username role');
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: error });
+    res.status(400).json({ error: error.message });
   }
 }
 

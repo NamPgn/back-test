@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
     } catch (error) {
         return res.json({
             message: "Đăng kí không thành công!",
-            success:false,
+            success: false,
         })
     }
 }
@@ -51,7 +51,7 @@ export const singin = async (req, res) => {
                 {
                     success: false,
                     message: 'Tài khoản không tồn tại',
-                    code:401
+                    code: 401
                 }
             )
         }
@@ -62,7 +62,7 @@ export const singin = async (req, res) => {
                 {
                     success: false,
                     message: 'Nhập lại mật khẩu đi',
-                    code:400
+                    code: 400
                 }
             )
         }
@@ -71,6 +71,8 @@ export const singin = async (req, res) => {
             username: getUserLogin.username,
             // email: getUserLogin.email,
             role: getUserLogin.role,
+            cart: getUserLogin.cart,
+            image: getUserLogin.image
         }
         const tokenAuth = generateToken(user)
         req.session = user
@@ -95,7 +97,7 @@ export const singin = async (req, res) => {
         })
     } catch (error) {
         res.status(400).json({
-            code:400,
+            code: 400,
             success: false,
             message: "Đăng nhập không thành công!",
         })
