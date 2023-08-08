@@ -34,11 +34,11 @@ const routers = [
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://tromphim.netlify.app');
   next();
 });
+app.use(cors());
 
 routers.map((router) => app.use("/api", router));
 
