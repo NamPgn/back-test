@@ -4,7 +4,7 @@ import Cart from "../module/cart";
 export const getAllCartControllers = async (req, res) => {
   try {
     const data = await Cart.find().populate('product', 'name seri image').populate('user', 'username role');
-    res.status(200).json(data);
+    res.status(200).endResponse(data);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

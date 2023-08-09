@@ -8,7 +8,7 @@ export const getAllCommentsControllers = async (req, res) => {
     const data = await Comments.find().populate('user', 'username role image' ).populate('product', 'name seri');
     res.json(data);
   } catch (error) {
-    return res.status(400).json({
+    return res.status(400).endResponse({
       message: error.message
     })
   }

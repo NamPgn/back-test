@@ -23,6 +23,9 @@ import { uploadVimeo } from '../controller/video.server.dinary';
 const router = express.Router();
 router.get('/products', getAllProducts);
 router.get('/product/:id', getOne);
+router.get('/category/products/:id', getAllProductsByCategory);
+router.get('/products/search', searchCategory);
+router.get('/product/comments/:id', findCommentByIdProduct);
 router.post('/product/vimeo', uploadServer.single('fileDinary'), uploadVimeo)
 router.post('/product/abyss/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadServer.single('fileupload'), uploadServer2)
 router.delete('/product/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, isSuperAdmin, delete_);
@@ -30,9 +33,6 @@ router.post('/product/:userId', checkToken, requiredSignin, isAuth, isAdmin, upl
 router.put('/product/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadvideoandimage, editProduct);
 router.post('/product/creating:/userId', checkToken, requiredSignin, isAuth, isAdmin, uploadStorageProduct.single('xlsxProduct'), uploadXlxsProducts);
 router.post('/product/deleteMultiple:/userId', checkToken, requiredSignin, isAuth, isAdmin, deleteMultipleProduct);
-router.get('/category/products/:id', getAllProductsByCategory);
-router.get('/products/search', searchCategory);
-router.get('/product/comments/:id', findCommentByIdProduct);
 router.post('/product/pushlist/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, pushtoTypes);
 router.post('/product/week/:id', pushToWeek);
 router.param('userId', getAuth)

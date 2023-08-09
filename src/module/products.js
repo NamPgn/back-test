@@ -69,6 +69,12 @@ const productSchema = new Schema({
   },
   dailyMotionServer:{
     type: String,
+  },
+  video2:{
+    type: String,
+  },
+  image2:{
+    type: String,
   }
 }, { timestamps: true, validateBeforeSave: false });
 productSchema.indexes();

@@ -6,7 +6,7 @@ const folderName = 'trailer'
 export const getUrlTrailerControllers = async (req, res) => {
   try {
     const data = await trailerHomePageModel.findOne();
-    res.status(200).json(data);
+    res.status(200).endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message
@@ -82,7 +82,7 @@ export const editTrailerHomePageUrlController = async (req, res) => {
 export const getTrailerController = async (req, res) => {
   try {
     const data = await getTrailerUrlSevices();
-    res.json(data);
+    res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message

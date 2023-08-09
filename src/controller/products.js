@@ -33,7 +33,7 @@ export const getAllProducts = async (req, res) => {
       await redisClient.set(`products`, JSON.stringify(All), "EX", 3600);
       data = All;
     }
-    res.status(200).json({
+    res.status(200).endResponse({
       data: data,
       length: redisGetdata ? redisGetdata.length : All.length,
     });
@@ -59,8 +59,9 @@ export const getOne = async (req, res) => {
       await redisClient.set(_id, JSON.stringify(dataID), "EX", 3600);
       data = dataID;
     }
-    res.status(200).json(data);
+    return res.status(200).endResponse(data);
   } catch (error) {
+    console.log(error)
     return res.status(400).json({
       message: "Không ìm thấy phim",
     });
@@ -84,11 +85,13 @@ export const addProduct = async (req, res) => {
       typeId,
       view,
       dailyMotionServer,
+      video2,
+      image2
     } = req.body;
     const folderName = "image";
-    const video = req.files["file"][0];
-    const filename = req.files["image"][0];
-    if (filename && video) {
+    if (req.files && req.files.file && req.files.image) {
+      const video = req.files["file"][0];
+      const filename = req.files["image"][0];
       //ảnh
       if (!filename) {
         res.status(201).json({ message: "không có hình ảnh" });
@@ -185,14 +188,18 @@ export const addProduct = async (req, res) => {
     } else {
       const dataAdd = {
         name: name,
-        category: category,
-        seri: seri,
+        category: category || undefined,
+        seri: seri || undefined,
+        options: options,
         descriptions: descriptions,
+        link: video2,
+        image: image2,
         uploadDate: new Date(),
         view: view,
         copyright: copyright,
         LinkCopyright: LinkCopyright,
-        trailer: trailer,
+        year: year,
+        country: country,
         dailyMotionServer: dailyMotionServer,
       };
       const data = await addPost(dataAdd);
@@ -290,8 +297,9 @@ export const editProduct = async (req, res, next) => {
       descriptions,
       trailer,
       dailyMotionServer,
+      video2,
+      image2
     } = req.body;
-
     // const data = await editProductSevices(_id, dataEdit);
     const findById = await Products.findById(id);
     // Kiểm tra sản phẩm có tồn tại trong CSDL hay không
@@ -316,10 +324,9 @@ export const editProduct = async (req, res, next) => {
     findById.category = category || undefined;
     findById.typeId = typeId || undefined;
 
-    const newVideoFile = req.files["file"] && req.files["file"][0];
-    const newImageFile = req.files["image"] && req.files["image"][0];
-
-    if (newVideoFile || newImageFile) {
+    if (req.files && req.files.file && req.files.image) {
+      const newVideoFile = req.files["file"] && req.files["file"][0];
+      const newImageFile = req.files["image"] && req.files["image"][0];
       const metadataImage = {
         contentType: newImageFile.mimetype,
       };
@@ -383,11 +390,12 @@ export const editProduct = async (req, res, next) => {
       findById.country = country;
       findById.year = year;
       findById.dailyMotionServer = dailyMotionServer;
-      findById.seri = seri || undefined;
+      findById.seri = seri;
       findById.categorymain = categorymain;
       findById.typeId = typeId;
       findById.category = category;
-
+      findById.link = video2;
+      findById.image = image2;
       await findById.save();
       return res.status(200).json({
         success: true,
@@ -445,7 +453,7 @@ export const getAllProductsByCategory = async (req, res) => {
     // ]);
     const data = await Products.find({ category: categoryId })
     data.sort((a, b) => parseInt(b.seri) - parseInt(a.seri));
-    res.status(200).json(data);
+    res.status(200).endResponse(data);
     //Trong đó:
     // $lookup là phương thức kết hợp (join) dữ liệu từ hai bảng Products và categories.
     // from là tên bảng categories.
@@ -467,7 +475,7 @@ export const findCommentByIdProduct = async (req, res) => {
       "comments.user",
       "username image"
     );
-    res.json(data);
+    res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,

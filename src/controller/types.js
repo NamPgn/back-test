@@ -5,7 +5,7 @@ import category from "../module/category";
 export const GetAllTypeCategorys = async (req, res) => {
   try {
     const data = await Types.find().sort({ 'path': 1 }).populate('categorymain.cates').populate('products').populate('category');
-    return res.status(200).json(data);
+    return res.status(200).endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -30,7 +30,7 @@ export const GetOneTypeCategory = async (req, res) => {
         }
       })
       .populate('category');
-    return res.status(200).json({
+    return res.status(200).endResponse({
       data: data,
       length: (await Types.findById(id).populate('products')).products.length
     });
@@ -113,7 +113,7 @@ export const pushCategory = async (req, res) => {
 export const getPhim = async (req, res) => {
   try {
     const data = await Types.findOne({ name: "Trending" }).populate('categorymain.cates').populate('products').populate('category')
-    return res.status(200).json(data)
+    return res.status(200).endResponse(data)
   } catch (error) {
     return res.status(400).json({
       message: error.message,

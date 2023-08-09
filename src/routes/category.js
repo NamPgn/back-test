@@ -8,10 +8,10 @@ const router = express.Router();
 router.get('/category/products', readProductByCategory);
 router.get('/categorys', getAll);
 router.get('/category/:id', getOne);
+router.get('/category/getAllCategoryNotRequest/:id', getAllCategoryNotReq);
 router.post('/category/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadCategory.single('file'), addCt);
 router.put('/category/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, uploadCategory.single('file'), updateCate);
 router.delete('/category/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, deleteCategoryController)
-router.get('/category/getAllCategoryNotRequest/:id', getAllCategoryNotReq);
 router.post('/category/week/:id/:userId', checkToken, requiredSignin, isAuth, isAdmin, push);
 router.param('userId', getAuth);
 export default router

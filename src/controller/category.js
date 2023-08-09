@@ -20,7 +20,6 @@ export const getAll = async (req, res) => {
     await Category.createIndexes();
     const resdisData = JSON.parse(await redisClient.get("categorys"));
     const skip = (page - 1) * default_limit; //số lượng bỏ qua
-    await redisClient.set("categorys", JSON.stringify(data), "EX", 3600);
     let category;
     if (page) {
       if (resdisData) {
@@ -31,11 +30,12 @@ export const getAll = async (req, res) => {
       const categorys = JSON.parse(await redisClient.get("categorys"));
       category = categorys;
     }
-    res.status(200).json({
+    res.status(200).endResponse({
       data: category,
       length: data.length,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       message: error.message,
     });
@@ -46,7 +46,7 @@ export const getOne = async (req, res) => {
   try {
     const id = req.params.id;
     const data = await getCategory(id);
-    res.json(data);
+    return res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -58,7 +58,7 @@ export const readProductByCategory = async (req, res) => {
   try {
     const data = await Products.find().populate("category", "name");
 
-    res.json(data);
+    return res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -120,7 +120,7 @@ export const updateCate = async (req, res) => {
     const { id } = req.params;
     const newfile = req.file;
     const findById = await Category.findById(id);
-    
+
     // Xóa tệp hình ảnh cũ từ Firebase Storage
     // const oldImageFileName = findById.linkImg.split(`/`).pop().split('?alt=media')[0]; //lấy sau thằng image vì nó qua folder name là image
     // const decodedImage = decodeURIComponent(oldImageFileName).split('/')[1]; //
@@ -177,7 +177,7 @@ export const updateCate = async (req, res) => {
         findById.sumSeri = sumSeri;
         findById.up = up;
         findById.type = type;
-        
+
         // Cập nhật thông tin category tương ứng trong bảng week
 
         // await WeekCategory.findOneAndUpdate(
@@ -232,7 +232,7 @@ export const getAllCategoryNotReq = async (req, res) => {
   try {
     const id = req.params.id;
     const data = await Category.find({ _id: { $ne: id } });
-    res.json(data);
+    return res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -247,7 +247,7 @@ export const searchCategory = async (req, res) => {
     const data = await Category.find({
       $or: [{ name: regex }],
     });
-    res.json(data);
+    res.endResponse(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
