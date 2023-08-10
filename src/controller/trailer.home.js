@@ -64,7 +64,7 @@ export const editTrailerHomePageUrlController = async (req, res) => {
         const urlvideo = `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodedFileName}?alt=media`;
         findById.name = name
         findById.url = urlvideo
-        const data = await findById.save()
+        const data = await findById.save({ new: true })
         return res.status(200).json({ success: true, message: "Dữ liệu sản phẩm đã được cập nhật.", data: data });
       })
     } else {

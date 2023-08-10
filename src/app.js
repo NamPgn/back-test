@@ -77,11 +77,10 @@ const data = [
   }
 ];
 const key = 'my-secret-key';
-const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
-console.log(encryptedData);
-const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, key);
-const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+// const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
+console.log(key);
+// const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, key);
+// const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
-console.log(decryptedData);  // In ra: Hello, world!
 //https://accounts.google.com/o/oauth2/token?scope=https://www.googleapis.com/auth/drive&client_id=949752774575-9bh3rqk5j6ntflgkikluk7jhd8kiihfi.apps.googleusercontent.com&redirect_uri=http://localhost:8000&response_type=code&access_type=offline
 //https://accounts.google.com/o/oauth2/token?code
