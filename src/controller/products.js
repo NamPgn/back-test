@@ -297,8 +297,8 @@ export const editProduct = async (req, res, next) => {
       descriptions,
       trailer,
       dailyMotionServer,
-      video2,
-      image2
+      link,
+      image
     } = req.body;
     // const data = await editProductSevices(_id, dataEdit);
     const findById = await Products.findById(id);
@@ -394,8 +394,8 @@ export const editProduct = async (req, res, next) => {
       findById.categorymain = categorymain;
       findById.typeId = typeId;
       findById.category = category;
-      findById.link = video2;
-      findById.image = image2;
+      findById.link = link;
+      findById.image = image;
       await findById.save();
       return res.status(200).json({
         success: true,
