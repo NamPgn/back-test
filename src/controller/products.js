@@ -86,7 +86,7 @@ export const addProduct = async (req, res) => {
       view,
       dailyMotionServer,
       video2,
-      image2
+      imageLink
     } = req.body;
     const folderName = "image";
     if (req.files && req.files.file && req.files.image) {
@@ -193,7 +193,7 @@ export const addProduct = async (req, res) => {
         options: options,
         descriptions: descriptions,
         link: video2,
-        image: image2,
+        image: imageLink,
         uploadDate: new Date(),
         view: view,
         copyright: copyright,
@@ -201,6 +201,8 @@ export const addProduct = async (req, res) => {
         year: year,
         country: country,
         dailyMotionServer: dailyMotionServer,
+        video2: video2,
+        imageLink: imageLink
       };
       const data = await addPost(dataAdd);
       return res.status(200).json(data);
@@ -298,7 +300,8 @@ export const editProduct = async (req, res, next) => {
       trailer,
       dailyMotionServer,
       link,
-      image
+      imageLink,
+      video2
     } = req.body;
     // const data = await editProductSevices(_id, dataEdit);
     const findById = await Products.findById(id);
@@ -395,7 +398,9 @@ export const editProduct = async (req, res, next) => {
       findById.typeId = typeId;
       findById.category = category;
       findById.link = link;
-      findById.image = image;
+      findById.image = imageLink;
+      findById.video2 = link;
+      findById.imageLink = imageLink;
       await findById.save();
       return res.status(200).json({
         success: true,

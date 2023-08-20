@@ -73,7 +73,7 @@ const productSchema = new Schema({
   video2:{
     type: String,
   },
-  image2:{
+  imageLink:{
     type: String,
   }
 }, { timestamps: true, validateBeforeSave: false });
