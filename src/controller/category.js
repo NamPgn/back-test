@@ -30,7 +30,7 @@ export const getAll = async (req, res) => {
       const categorys = JSON.parse(await redisClient.get("categorys"));
       category = categorys;
     }
-    res.status(200).endResponse({
+    res.status(200).json({
       data: category,
       length: data.length,
     });
@@ -46,7 +46,7 @@ export const getOne = async (req, res) => {
   try {
     const id = req.params.id;
     const data = await getCategory(id);
-    return res.endResponse(data);
+    return res.json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -58,7 +58,7 @@ export const readProductByCategory = async (req, res) => {
   try {
     const data = await Products.find().populate("category", "name");
 
-    return res.endResponse(data);
+    return res.json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -232,7 +232,7 @@ export const getAllCategoryNotReq = async (req, res) => {
   try {
     const id = req.params.id;
     const data = await Category.find({ _id: { $ne: id } });
-    return res.endResponse(data);
+    return res.json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -247,7 +247,7 @@ export const searchCategory = async (req, res) => {
     const data = await Category.find({
       $or: [{ name: regex }],
     });
-    res.endResponse(data);
+    res.json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,

@@ -5,7 +5,7 @@ import Types from "../module/types";
 export const getAllCategorymain = async (req, res) => {
   try {
     const data = await Categorymain.find();
-    return res.status(200).endResponse(data);
+    return res.status(200).json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -18,9 +18,9 @@ export const getOneCategoryMain = async (req, res) => {
   try {
     const id = req.params.id;
     const data = await Categorymain.findById(id).populate('products').populate('typeId', 'name');
-    return res.endResponse(data);
+    return res.json(data);
   } catch (error) {
-    return res.status(400).endResponse({
+    return res.status(400).json({
       message: error.message
     })
   }

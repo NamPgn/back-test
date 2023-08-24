@@ -3,9 +3,9 @@ import Auth from "../module/auth";
 export const getAlluser = async (req, res) => {
     try {
         const data = await getAll();
-        return res.endResponse(data);
+        return res.json(data);
     } catch (error) {
-        return res.status(400).endResponse({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 }
 
@@ -42,7 +42,7 @@ export const getone = async (req, res, next) => {
         const id = req.params.id
         const user = await Auth.findById(id).populate('cart.product', 'name seri image category').exec();
         user.password = undefined;
-        return res.status(200).endResponse(user)
+        return res.status(200).json(user)
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }

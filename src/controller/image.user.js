@@ -45,7 +45,7 @@ export const uploadUserImageToCloudDinary = (req, res) => {
 export const getImage = async (req, res) => {
   try {
     const data = await imageBackground.findOne();
-    return res.status(200).endResponse({
+    return res.status(200).json({
       data,
       code: 200,
       success: true

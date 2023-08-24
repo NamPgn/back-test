@@ -33,7 +33,7 @@ export const getAllProducts = async (req, res) => {
       await redisClient.set(`products`, JSON.stringify(All), "EX", 3600);
       data = All;
     }
-    res.status(200).endResponse({
+    res.status(200).json({
       data: data,
       length: redisGetdata ? redisGetdata.length : All.length,
     });
@@ -59,7 +59,7 @@ export const getOne = async (req, res) => {
       await redisClient.set(_id, JSON.stringify(dataID), "EX", 3600);
       data = dataID;
     }
-    return res.status(200).endResponse(data);
+    return res.status(200).json(data);
   } catch (error) {
     console.log(error)
     return res.status(400).json({
@@ -458,7 +458,7 @@ export const getAllProductsByCategory = async (req, res) => {
     // ]);
     const data = await Products.find({ category: categoryId })
     data.sort((a, b) => parseInt(b.seri) - parseInt(a.seri));
-    res.status(200).endResponse(data);
+    res.status(200).json(data);
     //Trong đó:
     // $lookup là phương thức kết hợp (join) dữ liệu từ hai bảng Products và categories.
     // from là tên bảng categories.
@@ -480,7 +480,7 @@ export const findCommentByIdProduct = async (req, res) => {
       "comments.user",
       "username image"
     );
-    res.endResponse(data);
+    res.json(data);
   } catch (error) {
     return res.status(400).json({
       message: error.message,

@@ -41,13 +41,6 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
-app.use((req, res, next) => {
-  res.endResponse = (data) => {
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.SECERT_CRYPTO_KEY).toString();
-    res.json(encryptedData);
-  }
-  next();
-})
 routers.map((router) => app.use("/api", router));
 
 app.get("/", (req, res) => {
@@ -71,11 +64,6 @@ app.listen(port, async () => {
 });
 
 
-const data = [
-  {
-    data: '1'
-  }
-];
 const key = 'my-secret-key';
 // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
 console.log(key);
