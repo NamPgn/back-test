@@ -218,7 +218,7 @@ export const deleteCategoryController = async (req, res) => {
   try {
     const { id } = req.params;
     const data = await deleteCategory(id);
-    await WeekCategory.findByIdAndDelete(data.week, {
+    await WeekCategory.findByIdAndUpdate(data.week, {
       $pull: { category: data._id },
     });
     return res.json(data);
